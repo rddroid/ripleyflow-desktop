@@ -6,17 +6,17 @@ interface HeaderProps {
 
 export default function Header({ onSettingsClick }: HeaderProps) {
   return (
-    <header className="sticky top-0 flex items-center justify-between px-4 py-3 border-b border-gray-700 bg-gray-800">
-      <h1 className="text-xl font-bold text-white">
+    <header className="sticky top-0 flex items-center justify-between px-4 py-1.5 border-b border-vscode-border bg-vscode-panel">
+      <h1 className="text-lg font-bold text-vscode-text">
         RipleyFlow
       </h1>
       <button
         onClick={onSettingsClick}
-        className="p-2 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+        className="p-1.5 text-vscode-text-secondary hover:text-vscode-text hover:bg-vscode-bg rounded-lg transition-colors"
         aria-label="Settings"
         title="Settings"
       >
-        <IoSettingsOutline className="h-5 w-5" />
+        <IoSettingsOutline className="h-4 w-4" />
       </button>
     </header>
   );

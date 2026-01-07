@@ -102,6 +102,10 @@ pub async fn convert_video(
                 "+faststart".to_string(), // Enable fast start for web playback
                 "-pix_fmt".to_string(),
                 "yuv420p".to_string(), // Ensure browser-compatible pixel format
+                "-profile:v".to_string(),
+                "high".to_string(), // H.264 profile for better compatibility
+                "-level".to_string(),
+                "4.0".to_string(), // H.264 level
             ]);
         }
         "avi" => {
@@ -171,7 +175,55 @@ pub async fn convert_video(
     Ok(options.output_path)
 }
 
+/// Read video file and return as base64 data URL for browser playback
+/// This allows playing any video file in the browser
+#[tauri::command]
+pub async fn read_video_file(file_path: String) -> Result<String, String> {
+    use std::fs;
+    use base64::{Engine, engine::general_purpose};
+    
+    let path = PathBuf::from(&file_path);
+    if !path.exists() {
+        return Err("File does not exist".to_string());
+    }
+
+    // Check file size - warn if too large (over 100MB)
+    let metadata = fs::metadata(&path)
+        .map_err(|e| format!("Failed to read file metadata: {}", e))?;
+    
+    if metadata.len() > 100 * 1024 * 1024 {
+        return Err("File is too large (>100MB) to load in browser. Please use 'Open in External Player' instead.".to_string());
+    }
+
+    let file_data = fs::read(&path)
+        .map_err(|e| format!("Failed to read file: {}", e))?;
+
+    // Determine MIME type from file extension
+    let mime_type = if file_path.to_lowercase().ends_with(".mp4") {
+        "video/mp4"
+    } else if file_path.to_lowercase().ends_with(".webm") {
+        "video/webm"
+    } else if file_path.to_lowercase().ends_with(".ogg") || file_path.to_lowercase().ends_with(".ogv") {
+        "video/ogg"
+    } else if file_path.to_lowercase().ends_with(".avi") {
+        "video/x-msvideo"
+    } else if file_path.to_lowercase().ends_with(".mov") {
+        "video/quicktime"
+    } else if file_path.to_lowercase().ends_with(".mkv") {
+        "video/x-matroska"
+    } else {
+        "video/mp4" // Default to mp4
+    };
+
+    // Convert to base64
+    let base64 = general_purpose::STANDARD.encode(&file_data);
+    let data_url = format!("data:{};base64,{}", mime_type, base64);
+
+    Ok(data_url)
+}
+
 /// Get a file URL for video playback
+/// Returns the file path for use with convertFileSrc or other methods
 #[tauri::command]
 pub async fn get_video_url(file_path: String) -> Result<String, String> {
     let path = PathBuf::from(&file_path);
@@ -179,9 +231,9 @@ pub async fn get_video_url(file_path: String) -> Result<String, String> {
         return Err("File does not exist".to_string());
     }
 
-    // Return the file path as-is - we'll use convertFileSrc on the frontend
-    // or create a file:// URL
-    Ok(file_path)
+    // Return normalized path
+    let normalized = file_path.replace('\\', "/");
+    Ok(normalized)
 }
 
 /// Open file with system default application
@@ -194,7 +246,6 @@ pub async fn open_file_externally(_app: AppHandle, file_path: String) -> Result<
         return Err("File does not exist".to_string());
     }
 
-    // Use platform-specific command to open file
     #[cfg(target_os = "windows")]
     {
         Command::new("cmd")
@@ -202,7 +253,7 @@ pub async fn open_file_externally(_app: AppHandle, file_path: String) -> Result<
             .spawn()
             .map_err(|e| format!("Failed to open file: {}", e))?;
     }
-    
+
     #[cfg(target_os = "macos")]
     {
         Command::new("open")
@@ -210,7 +261,7 @@ pub async fn open_file_externally(_app: AppHandle, file_path: String) -> Result<
             .spawn()
             .map_err(|e| format!("Failed to open file: {}", e))?;
     }
-    
+
     #[cfg(target_os = "linux")]
     {
         Command::new("xdg-open")
@@ -222,12 +273,30 @@ pub async fn open_file_externally(_app: AppHandle, file_path: String) -> Result<
     Ok(())
 }
 
-/// Cancel the current operation
+/// Cancel ongoing FFmpeg operation
 #[tauri::command]
-pub async fn cancel_operation(
-    process_state: State<'_, Arc<Mutex<Option<Child>>>>,
-) -> Result<(), String> {
-    ffmpeg::cancel_ffmpeg_operation(process_state.inner().clone())
-        .map_err(|e| e.message)
+pub async fn cancel_operation(process_state: State<'_, Arc<Mutex<Option<Child>>>>) -> Result<(), String> {
+    let mut state = process_state.lock().unwrap();
+    if let Some(mut child) = state.take() {
+        #[cfg(target_os = "windows")]
+        {
+            use std::process::Command;
+            // On Windows, we need to kill the process tree
+            if let Ok(output) = Command::new("taskkill")
+                .args(["/F", "/T", "/PID", &child.id().to_string()])
+                .output()
+            {
+                if !output.status.success() {
+                    let _ = child.kill();
+                }
+            } else {
+                let _ = child.kill();
+            }
+        }
+        #[cfg(not(target_os = "windows"))]
+        {
+            let _ = child.kill();
+        }
+    }
+    Ok(())
 }
-

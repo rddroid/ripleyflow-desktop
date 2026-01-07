@@ -1,17 +1,17 @@
 interface TabsProps {
-  activeTab: "converter" | "preview";
-  onTabChange: (tab: "converter" | "preview") => void;
+  activeTab: "converter" | "preview" | "denoiser";
+  onTabChange: (tab: "converter" | "preview" | "denoiser") => void;
 }
 
 export default function Tabs({ activeTab, onTabChange }: TabsProps) {
   return (
-    <div className="flex border-b border-gray-700 mb-4">
+    <div className="flex border-b border-vscode-border mb-4">
       <button
         onClick={() => onTabChange("converter")}
         className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
           activeTab === "converter"
             ? "text-blue-400 border-b-2 border-blue-400"
-            : "text-gray-400 hover:text-gray-200"
+            : "text-vscode-text-secondary hover:text-vscode-text"
         }`}
       >
         Video Converter
@@ -21,10 +21,20 @@ export default function Tabs({ activeTab, onTabChange }: TabsProps) {
         className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
           activeTab === "preview"
             ? "text-blue-400 border-b-2 border-blue-400"
-            : "text-gray-400 hover:text-gray-200"
+            : "text-vscode-text-secondary hover:text-vscode-text"
         }`}
       >
         Preview Generation
+      </button>
+      <button
+        onClick={() => onTabChange("denoiser")}
+        className={`flex-1 px-4 py-2 text-sm font-medium transition-colors ${
+          activeTab === "denoiser"
+            ? "text-blue-400 border-b-2 border-blue-400"
+            : "text-vscode-text-secondary hover:text-vscode-text"
+        }`}
+      >
+        Video Denoiser
       </button>
     </div>
   );

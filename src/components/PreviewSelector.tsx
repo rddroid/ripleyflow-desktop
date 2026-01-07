@@ -8,33 +8,35 @@ export default function PreviewSelector({
   onPreviewTypeChange,
 }: PreviewSelectorProps) {
   return (
-    <div className="space-y-1">
-      <label className="block text-xs font-medium text-gray-300">
+    <div className="space-y-3">
+      <label className="block text-xs font-medium text-vscode-text-secondary uppercase tracking-wide">
         Preview Type
       </label>
-      <div className="flex space-x-3">
-        <label className="flex items-center space-x-1.5 cursor-pointer">
-          <input
-            type="radio"
-            name="previewType"
-            value="thumbnail"
-            checked={previewType === "thumbnail"}
-            onChange={() => onPreviewTypeChange("thumbnail")}
-            className="w-3.5 h-3.5 text-blue-500 focus:ring-blue-500"
-          />
-          <span className="text-sm text-gray-200">Thumbnail (Single Frame)</span>
-        </label>
-        <label className="flex items-center space-x-1.5 cursor-pointer">
-          <input
-            type="radio"
-            name="previewType"
-            value="clip"
-            checked={previewType === "clip"}
-            onChange={() => onPreviewTypeChange("clip")}
-            className="w-3.5 h-3.5 text-blue-500 focus:ring-blue-500"
-          />
-          <span className="text-sm text-gray-200">Clip (5 seconds)</span>
-        </label>
+      <div className="relative inline-flex bg-vscode-bg border border-vscode-border rounded-lg p-1 gap-1">
+        <button
+          type="button"
+          onClick={() => onPreviewTypeChange("thumbnail")}
+          className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ease-in-out min-w-[140px] ${
+            previewType === "thumbnail"
+              ? "bg-blue-600 text-white shadow-sm"
+              : "text-vscode-text-secondary hover:text-vscode-text hover:bg-vscode-panel"
+          }`}
+        >
+          <span className="relative z-10">Thumbnail</span>
+          <span className="relative z-10 block text-xs opacity-80 mt-0.5">Single Frame</span>
+        </button>
+        <button
+          type="button"
+          onClick={() => onPreviewTypeChange("clip")}
+          className={`relative px-4 py-2 text-sm font-medium rounded-md transition-all duration-200 ease-in-out min-w-[140px] ${
+            previewType === "clip"
+              ? "bg-blue-600 text-white shadow-sm"
+              : "text-vscode-text-secondary hover:text-vscode-text hover:bg-vscode-panel"
+          }`}
+        >
+          <span className="relative z-10">Clip</span>
+          <span className="relative z-10 block text-xs opacity-80 mt-0.5">5 seconds</span>
+        </button>
       </div>
     </div>
   );

@@ -67,7 +67,7 @@ export default function VideoSelector({ onVideoSelected }: VideoSelectorProps) {
       className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
         isDragging
           ? "border-blue-500 bg-blue-900/20"
-          : "border-gray-600 bg-gray-700/50 hover:border-gray-500"
+          : "border-vscode-border bg-vscode-bg hover:border-vscode-text-secondary"
       }`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -75,7 +75,7 @@ export default function VideoSelector({ onVideoSelected }: VideoSelectorProps) {
     >
       <div className="flex flex-col items-center space-y-2">
         <svg
-          className="w-12 h-12 text-gray-400"
+          className="w-12 h-12 text-vscode-text-secondary"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -88,10 +88,10 @@ export default function VideoSelector({ onVideoSelected }: VideoSelectorProps) {
           />
         </svg>
         <div>
-          <p className="text-sm font-medium text-gray-200">
+          <p className="text-sm font-medium text-vscode-text">
             Select a video file
           </p>
-          <p className="text-xs text-gray-400 mt-1">
+          <p className="text-xs text-vscode-text-secondary mt-1">
             Drag and drop a video file here, or click to browse
           </p>
         </div>

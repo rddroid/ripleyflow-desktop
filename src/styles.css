@@ -24,5 +24,37 @@ html, body {
 #root {
   height: 100%;
   width: 100%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Strict video container constraints for VideoPlayer - use ID selector for maximum specificity */
+#video-player-container {
+  height: 350px !important;
+  max-height: 350px !important;
+  min-height: 350px !important;
+  overflow: hidden !important;
+  position: relative !important;
+  box-sizing: border-box !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+#video-player-container video {
+  max-height: 330px !important;
+  max-width: 100% !important;
+  height: auto !important;
+  width: auto !important;
+  object-fit: contain !important;
+  display: block !important;
+  box-sizing: border-box !important;
+  flex-shrink: 0 !important;
+}
+
+/* Also constrain the parent wrapper - but allow path to show */
+.bg-vscode-bg.border.rounded-lg.p-2:has(#video-player-container) {
+  /* Removed max-height and overflow to allow path text to be visible */
 }
 

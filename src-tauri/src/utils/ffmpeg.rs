@@ -171,6 +171,7 @@ pub fn execute_ffmpeg_with_progress(
 }
 
 /// Cancel the current FFmpeg operation
+#[allow(dead_code)]
 pub fn cancel_ffmpeg_operation(process_state: Arc<Mutex<Option<Child>>>) -> Result<(), FFmpegError> {
     let mut state = process_state.lock().unwrap();
     if let Some(mut child) = state.take() {

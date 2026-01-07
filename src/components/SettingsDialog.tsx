@@ -76,13 +76,13 @@ export default function SettingsDialog({ isOpen, onClose }: SettingsDialogProps)
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center">
-      <div className="bg-gray-800 rounded-lg shadow-xl w-full max-w-md mx-4 border border-gray-700">
+      <div className="bg-vscode-panel rounded-lg shadow-xl w-full max-w-md mx-4 border border-vscode-border">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-700">
-          <h2 className="text-xl font-bold text-white">Settings</h2>
+        <div className="flex items-center justify-between px-6 py-4 border-b border-vscode-border">
+          <h2 className="text-xl font-bold text-vscode-text">Settings</h2>
           <button
             onClick={onClose}
-            className="p-1 text-gray-400 hover:text-white hover:bg-gray-700 rounded-lg transition-colors"
+            className="p-1 text-vscode-text-secondary hover:text-vscode-text hover:bg-vscode-bg rounded-lg transition-colors"
             aria-label="Close"
           >
             <IoMdClose className="h-5 w-5" />
@@ -93,16 +93,16 @@ export default function SettingsDialog({ isOpen, onClose }: SettingsDialogProps)
         <div className="px-6 py-4 space-y-4">
           {loading ? (
             <div className="text-center py-8">
-              <p className="text-gray-400">Loading settings...</p>
+              <p className="text-vscode-text-secondary">Loading settings...</p>
             </div>
           ) : (
             <>
               {/* Workspace Path */}
               <div>
-                <label className="block text-sm font-medium text-gray-200 mb-2">
+                <label className="block text-sm font-medium text-vscode-text mb-2">
                   Workspace Path
                 </label>
-                <p className="text-xs text-gray-400 mb-2">
+                <p className="text-xs text-vscode-text-secondary mb-2">
                   Location where converted videos and previews will be saved
                 </p>
                 <div className="flex gap-2">
@@ -113,11 +113,11 @@ export default function SettingsDialog({ isOpen, onClose }: SettingsDialogProps)
                       setSettings({ ...settings, workspace_path: e.target.value })
                     }
                     placeholder="Select a folder..."
-                    className="flex-1 px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+                    className="flex-1 px-3 py-2 bg-vscode-bg text-vscode-text rounded-lg border border-vscode-border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
                   />
                   <button
                     onClick={handleSelectFolder}
-                    className="px-4 py-2 bg-gray-700 text-gray-200 rounded-lg hover:bg-gray-600 transition-colors text-sm font-medium"
+                    className="px-4 py-2 bg-vscode-bg text-vscode-text rounded-lg hover:bg-vscode-sidebar transition-colors text-sm font-medium border border-vscode-border"
                   >
                     Browse
                   </button>
@@ -142,10 +142,10 @@ export default function SettingsDialog({ isOpen, onClose }: SettingsDialogProps)
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-700">
+        <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-vscode-border">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-gray-300 hover:text-white transition-colors text-sm font-medium"
+            className="px-4 py-2 text-vscode-text-secondary hover:text-vscode-text transition-colors text-sm font-medium"
           >
             Cancel
           </button>

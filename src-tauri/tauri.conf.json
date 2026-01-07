@@ -11,11 +11,15 @@
   "app": {
     "windows": [
       {
+        "label": "main",
         "title": "RipleyFlow",
-        "width": 800,
-        "height": 600,
+        "width": 1200,
+        "height": 750,
         "resizable": true,
-        "fullscreen": false
+        "fullscreen": false,
+        "minWidth": 800,
+        "minHeight": 700,
+        "center": true
       }
     ],
     "security": {
@@ -35,7 +39,8 @@
       "icons/512x512.png"
     ],
     "resources": [
-      "binaries/ffmpeg/ffmpeg.exe"
+      "binaries/ffmpeg/ffmpeg.exe",
+      "binaries/deep-filter/deep-filter.exe"
     ]
   },
   "plugins": {}
